@@ -1,0 +1,40 @@
+{
+	"id": "Metabolite",
+	"name": "The Metabolite",
+	"description": "Immensely overengineered, this slugcat requires energy for anything special.<LINE>Currently a recolored survivor.",
+	"features": {
+		"color": "17244f",
+  "custom_colors": [
+   { "name": "Body", "story": "17244F" },
+   { "name": "Eyes", "story": "003800" },
+   { "name": "Tongue", "story": "FF7777" }
+  ],
+  "weight": 0.9,
+  "tunnel_speed": 2,
+  "climb_speed": 2,
+  "walk_speed": 2,
+  "throw_skill": 2,
+  "lung_capacity": 3,
+  "alignments": {
+   "Lizards": { "like": 1.0, "strength": 0.2 },
+   "Scavengers": { "like": 1.0, "strength": 0.2 }
+  },
+  "diet": {
+   "corpses": 1.0,
+   "meat": 1.0,
+   "plants": 1.0
+  },
+  "back_spear": true,
+  "can_maul": true,
+  "karma": 3,
+  "karma_cap": 2,
+  "the_mark": true,
+  "start_room": "SU_C04",
+  "food_min": 4,
+  "food_max": 12,
+  "timeline_before": "Spear",
+		
+		"select_menu_scene": "Slugcat_Metabolite",
+		"select_menu_scene_ascended": "Ghost_Metabolite"
+	}
+}
