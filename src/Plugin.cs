@@ -31,12 +31,25 @@ namespace SlugTemplate
             On.Player.ctor += Saint.Player_ctor;
             On.Player.SaintTongueCheck += Saint.Player_SaintTongueCheck;
             On.Player.ClassMechanicsSaint += Saint.Player_ClassMechanicsSaint;
+            On.Player.ClassMechanicsArtificer += Artificer.ClassMechanicsArtificer;
             On.PlayerGraphics.ctor += Saint.PlayerGraphics_ctor;
             On.PlayerGraphics.InitiateSprites += Saint.PlayerGraphics_InitiateSprites;
             On.PlayerGraphics.DrawSprites += Saint.PlayerGraphics_DrawSprites;
             On.PlayerGraphics.ApplyPalette += Saint.PlayerGraphics_ApplyPalette;
             On.PlayerGraphics.MSCUpdate += Saint.PlayerGraphics_MSCUpdate;
-      
+            On.Player.Grabability += Player_Grabability;
+            On.Player.ThrownSpear += Gourmand.ThrownSpear;
+            //On.Player.ClassMechanicsSpearmaster += Spearmaster.ClassMechanicsSpearmaster;
+            //On.Player.GrabUpdate += Spearmaster.GrabUpdate;
+        }
+
+        private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        {
+            if(self.slugcatStats.name.value == "Metabolite" && obj is Weapon)
+            {
+                return Player.ObjectGrabability.OneHand;
+            }
+            return orig.Invoke(self, obj);
         }
 
         // Load any resources, such as sprites or sounds
