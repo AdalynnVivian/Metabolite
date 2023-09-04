@@ -257,4 +257,84 @@ public static class Artificer
             }
         }
     }
+
+    public static AbstractPhysicalObject.AbstractObjectType CraftingResults(Player self)
+    {
+        if (self.FoodInStomach > 0)
+        {
+            Creature.Grasp[] grasps = self.grasps;
+            for (int i = 0; i < grasps.Length; i++)
+            {
+                if (grasps[i] != null && grasps[i].grabbed is IPlayerEdible && (grasps[i].grabbed as IPlayerEdible).Edible)
+                {
+                    return null;
+                }
+            }
+            if (grasps[0] != null && grasps[0].grabbed is Spear && !(grasps[0].grabbed as Spear).abstractSpear.explosive)
+            {
+                return AbstractPhysicalObject.AbstractObjectType.Spear;
+            }
+            if (grasps[0] == null && grasps[1] != null && grasps[1].grabbed is Spear && !(grasps[1].grabbed as Spear).abstractSpear.explosive && self.objectInStomach == null)
+            {
+                return AbstractPhysicalObject.AbstractObjectType.Spear;
+            }
+        }
+        return null;
+    }
+    public static void SwallowObject(On.Player.orig_SwallowObject orig, Player self, int grasp)
+    {
+        if (self.slugcatStats.name.value == "Metabolite")
+        {
+            if (grasp < 0 || self.grasps[grasp] == null)
+            {
+                return;
+            }
+            AbstractPhysicalObject abstractPhysicalObject = self.grasps[grasp].grabbed.abstractPhysicalObject;
+            if (abstractPhysicalObject is AbstractSpear)
+            {
+                (abstractPhysicalObject as AbstractSpear).stuckInWallCycles = 0;
+            }
+            self.objectInStomach = abstractPhysicalObject;
+            if (ModManager.MMF && self.room.game.session is StoryGameSession)
+            {
+                (self.room.game.session as StoryGameSession).RemovePersistentTracker(self.objectInStomach);
+            }
+            self.ReleaseGrasp(grasp);
+            self.objectInStomach.realizedObject.RemoveFromRoom();
+            self.objectInStomach.Abstractize(self.abstractCreature.pos);
+            self.objectInStomach.Room.RemoveEntity(self.objectInStomach);
+            if (ModManager.MSC && true && self.FoodInStomach > 0)
+            {
+                if (abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.Rock)
+                {
+                    abstractPhysicalObject = new AbstractPhysicalObject(self.room.world, AbstractPhysicalObject.AbstractObjectType.ScavengerBomb, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.room.game.GetNewID());
+                    self.SubtractFood(1);
+                }
+                else if (abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.Spear && !(abstractPhysicalObject as AbstractSpear).explosive && !(abstractPhysicalObject as AbstractSpear).electric)
+                {
+                    abstractPhysicalObject = new AbstractSpear(self.room.world, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.room.game.GetNewID(), true);
+                    self.SubtractFood(1);
+                }
+                else if (abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.FlyLure)
+                {
+                    abstractPhysicalObject = new AbstractConsumable(self.room.world, AbstractPhysicalObject.AbstractObjectType.FirecrackerPlant, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.room.game.GetNewID(), -1, -1, null);
+                    self.SubtractFood(1);
+                }
+                else if (abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.FlareBomb)
+                {
+                    abstractPhysicalObject = new AbstractPhysicalObject(self.room.world, AbstractPhysicalObject.AbstractObjectType.Lantern, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.room.game.GetNewID());
+                    self.SubtractFood(1);
+                }
+            }
+            self.objectInStomach = abstractPhysicalObject;
+            self.objectInStomach.Abstractize(self.abstractCreature.pos);
+            BodyChunk mainBodyChunk = self.mainBodyChunk;
+            mainBodyChunk.vel.y = mainBodyChunk.vel.y + 2f;
+            self.room.PlaySound(SoundID.Slugcat_Swallow_Item, self.mainBodyChunk);
+        }
+        else
+        {
+            orig(self, grasp);
+        }
+    }
 }

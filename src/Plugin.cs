@@ -10,12 +10,15 @@ using JetBrains.Annotations;
 using Expedition;
 using Noise;
 using Random = UnityEngine.Random;
+using System.Runtime.CompilerServices;
+using MonoMod;
 
 namespace SlugTemplate
 {
     [BepInPlugin(MOD_ID, "The Metabolite", "0.1.0")]
     class Plugin : BaseUnityPlugin
     {
+
         private const string MOD_ID = "adalynn.metabolite";
         /*public static readonly PlayerFeature<float> SuperJump = PlayerFloat("TheMetabolite/super_jump");
         public static readonly PlayerFeature<bool> ExplodeOnDeath = PlayerBool("TheMetabolite/explode_on_death");
@@ -39,8 +42,13 @@ namespace SlugTemplate
             On.PlayerGraphics.MSCUpdate += Saint.PlayerGraphics_MSCUpdate;
             On.Player.Grabability += Player_Grabability;
             On.Player.ThrownSpear += Gourmand.ThrownSpear;
-            //On.Player.ClassMechanicsSpearmaster += Spearmaster.ClassMechanicsSpearmaster;
-            //On.Player.GrabUpdate += Spearmaster.GrabUpdate;
+            On.Player.Update += Update;
+            On.Player.ClassMechanicsSpearmaster += Spearmaster.ClassMechanicsSpearmaster;
+            On.Player.GrabUpdate += Spearmaster.GrabUpdate;
+            On.Player.CraftingResults += Player_CraftingResults;
+            On.Player.GraspsCanBeCrafted += Spearmaster.GraspsCanBeCrafted;
+            On.Player.SpitUpCraftedObject += Player_SpitUpCraftedObject;
+            On.Player.SwallowObject += Artificer.SwallowObject;
         }
 
         private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
@@ -55,6 +63,7 @@ namespace SlugTemplate
         // Load any resources, such as sprites or sounds
         private void LoadResources(RainWorld rainWorld)
         {
+            
         }
         /*
         // Implement MeanLizards
@@ -176,7 +185,7 @@ namespace SlugTemplate
             }
             Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 1);
 
-            //Set the value of this dictionary to the last sprite
+            //Set the value of self dictionary to the last sprite
             if (TongueSpriteIndex.ContainsKey(self)) TongueSpriteIndex[self] = sLeaser.sprites.Length - 1;
             else TongueSpriteIndex.Add(self, sLeaser.sprites.Length - 1);
 
@@ -307,5 +316,136 @@ namespace SlugTemplate
             }
         }
         #endregion*/
+        private void Update(On.Player.orig_Update orig, Player self, bool eu)
+        {
+            orig(self, eu);
+        }
+
+        public void Player_GrabUpdate(On.Player.orig_GrabUpdate orig, Player self, bool eu)
+        {
+            if(self.slugcatStats.name.value == "Metabolite")
+            {
+                var S = self.SlugCatClass;
+                self.SlugCatClass = MoreSlugcatsEnums.SlugcatStatsName.Artificer;
+                orig(self, eu);
+                self.SlugCatClass = S;
+            }
+            else
+            {
+                orig(self, eu);
+            }
+        }
+
+        public AbstractPhysicalObject.AbstractObjectType Player_CraftingResults(On.Player.orig_CraftingResults orig, Player self)
+        {
+            if (self.slugcatStats.name.value == "Metabolite")
+            {
+                if(self.input[0].y == 0)
+                {
+                    return Artificer.CraftingResults(self);
+                }
+                else if (self.input[0].y == 1)
+                {
+                    return Gourmand.CraftingResults(self);
+                }
+                else
+                {
+                    return orig(self);
+                }
+            }
+            else
+            {
+                return orig(self);
+            }
+        }
+
+        public void Player_SpitUpCraftedObject(On.Player.orig_SpitUpCraftedObject orig, Player self)
+        {
+            self.craftingTutorial = true;
+            self.room.PlaySound(SoundID.Slugcat_Swallow_Item, self.mainBodyChunk);
+            if (true)
+            {
+                for (int i = 0; i < self.grasps.Length; i++)
+                {
+                    if (self.grasps[i] != null)
+                    {
+                        AbstractPhysicalObject abstractPhysicalObject = self.grasps[i].grabbed.abstractPhysicalObject;
+                        if (abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.Spear && !(abstractPhysicalObject as AbstractSpear).explosive)
+                        {
+                            if ((abstractPhysicalObject as AbstractSpear).electric && (abstractPhysicalObject as AbstractSpear).electricCharge > 0)
+                            {
+                                self.room.AddObject(new ZapCoil.ZapFlash(self.firstChunk.pos, 10f));
+                                self.room.PlaySound(SoundID.Zapper_Zap, self.firstChunk.pos, 1f, 1.5f + Random.value * 1.5f);
+                                if (self.Submersion > 0.5f)
+                                {
+                                    self.room.AddObject(new UnderwaterShock(self.room, null, self.firstChunk.pos, 10, 800f, 2f, self, new Color(0.8f, 0.8f, 1f)));
+                                }
+                                self.Stun(200);
+                                self.room.AddObject(new CreatureSpasmer(self, false, 200));
+                                return;
+                            }
+                            self.ReleaseGrasp(i);
+                            abstractPhysicalObject.realizedObject.RemoveFromRoom();
+                            self.room.abstractRoom.RemoveEntity(abstractPhysicalObject);
+                            self.SubtractFood(1);
+                            AbstractSpear abstractSpear = new AbstractSpear(self.room.world, null, self.abstractCreature.pos, self.room.game.GetNewID(), true);
+                            self.room.abstractRoom.AddEntity(abstractSpear);
+                            abstractSpear.RealizeInRoom();
+                            if (self.FreeHand() != -1)
+                            {
+                                self.SlugcatGrab(abstractSpear.realizedObject, self.FreeHand());
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+            AbstractPhysicalObject abstractPhysicalObject2 = null;
+            if (GourmandCombos.CraftingResults_ObjectData(self.grasps[0], self.grasps[1], true) == AbstractPhysicalObject.AbstractObjectType.DangleFruit)
+            {
+                if (ModManager.Expedition && ModManager.MSC && Custom.rainWorld.ExpeditionMode && ExpeditionGame.activeUnlocks.Contains("unl-crafting") && self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Spear)
+                {
+                    if (abstractPhysicalObject2 != null && self.FreeHand() != -1)
+                    {
+                        self.SlugcatGrab(abstractPhysicalObject2.realizedObject, self.FreeHand());
+                    }
+                    return;
+                }
+                while ((self.grasps[0] != null && self.grasps[0].grabbed is IPlayerEdible) || (self.grasps[1] != null && self.grasps[1].grabbed is IPlayerEdible))
+                {
+                    self.BiteEdibleObject(true);
+                }
+                self.AddFood(1);
+            }
+            else
+            {
+                abstractPhysicalObject2 = GourmandCombos.CraftingResults(self, self.grasps[0], self.grasps[1]);
+                self.room.abstractRoom.AddEntity(abstractPhysicalObject2);
+                abstractPhysicalObject2.RealizeInRoom();
+                for (int j = 0; j < self.grasps.Length; j++)
+                {
+                    AbstractPhysicalObject abstractPhysicalObject3 = self.grasps[j].grabbed.abstractPhysicalObject;
+                    if (self.room.game.session is StoryGameSession)
+                    {
+                        (self.room.game.session as StoryGameSession).RemovePersistentTracker(abstractPhysicalObject3);
+                    }
+                    self.ReleaseGrasp(j);
+                    for (int k = abstractPhysicalObject3.stuckObjects.Count - 1; k >= 0; k--)
+                    {
+                        if (abstractPhysicalObject3.stuckObjects[k] is AbstractPhysicalObject.AbstractSpearStick && abstractPhysicalObject3.stuckObjects[k].A.type == AbstractPhysicalObject.AbstractObjectType.Spear && abstractPhysicalObject3.stuckObjects[k].A.realizedObject != null)
+                        {
+                            (abstractPhysicalObject3.stuckObjects[k].A.realizedObject as Spear).ChangeMode(Weapon.Mode.Free);
+                        }
+                    }
+                    abstractPhysicalObject3.LoseAllStuckObjects();
+                    abstractPhysicalObject3.realizedObject.RemoveFromRoom();
+                    self.room.abstractRoom.RemoveEntity(abstractPhysicalObject3);
+                }
+            }
+            if (abstractPhysicalObject2 != null && self.FreeHand() != -1)
+            {
+                self.SlugcatGrab(abstractPhysicalObject2.realizedObject, self.FreeHand());
+            }
+        }
     }
 }

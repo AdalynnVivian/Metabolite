@@ -45,4 +45,8 @@ public static class Gourmand
             orig.Invoke(self, spear);
         }
     }
+    public static AbstractPhysicalObject.AbstractObjectType CraftingResults(Player self)
+    {
+        return GourmandCombos.CraftingResults_ObjectData(self.grasps[0], self.grasps[1], true);
+    }
 }

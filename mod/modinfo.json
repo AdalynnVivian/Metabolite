@@ -2,8 +2,8 @@
 	"id": "adalynn.metabolite",
 	"name": "The Metabolite",
 	"version": "0.1.0",
-	"authors": "Author",
+	"authors": "Adalynn",
 	"description": "A test slugcat.",
-	"requirements": ["slime-cubed.slugbase", "moreslugcats"],
-	"requirements_names": ["SlugBase", "More Slugcats Expansion"]
-}
+	"requirements": ["slime-cubed.slugbase", "moreslugcats", "dressmyslugcat"],
+	"requirements_names": ["SlugBase", "More Slugcats Expansion", "Dress My Slugcat"]
+ }

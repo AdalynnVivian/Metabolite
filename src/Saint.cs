@@ -53,7 +53,7 @@ public static class Saint
     public static void PlayerGraphics_ctor(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
     {
         orig.Invoke(self, ow);
-        if (self.player.slugcatStats.name.value != "Metabolite" && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "Metabolite" )//&& self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -62,6 +62,7 @@ public static class Saint
         {
             self.ropeSegments[k] = new PlayerGraphics.RopeSegment(k, self);
         }
+        self.tailSpecks = new PlayerGraphics.TailSpeckles(self, 12);
     }
     //This dictionary exists to make sure we always get the correct index of our new tongue sprite
     public static Dictionary<PlayerGraphics, int> TongueSpriteIndex = new();
