@@ -25,7 +25,9 @@ public static class Spearmaster
     public static void GrabUpdate(On.Player.orig_GrabUpdate orig, Player self, bool eu)
     {
         // Token: 0x06000B8F RID: 2959 RVA: 0x000A6244 File Offset: 0x000A4444
-        if(self.slugcatStats.name.value == "Metabolite" && self.FoodInStomach >= 1 && self.bodyMode == Player.BodyModeIndex.Crawl && self.eatMeat == 0) {
+        if (self.slugcatStats.name.value == "Metabolite" && self.FoodInStomach >= 1 && self.bodyMode == Player.BodyModeIndex.Crawl && self.eatMeat == 0) {
+            var s = self.SlugCatClass;
+            self.SlugCatClass = MoreSlugcatsEnums.SlugcatStatsName.Artificer;
             if (self.spearOnBack != null)
             {
                 self.spearOnBack.Update(eu);
@@ -891,12 +893,18 @@ public static class Spearmaster
                     self.wantToPickUp = 0;
                 }
             }
+            self.SlugCatClass = s;
         }
         else
         {
             orig(self, eu);
         }
     }
+    public static void Grab_Update(On.Player.orig_GrabUpdate orig, Player self, bool eu)
+    {
+        orig.Invoke(self, eu);
+    }
+
     public static bool GraspsCanBeCrafted(On.Player.orig_GraspsCanBeCrafted orig, Player self)
     {
         if (self.slugcatStats.name.value == "Metabolite")
@@ -910,3 +918,4 @@ public static class Spearmaster
         }
     }
 }
+

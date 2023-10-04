@@ -12,6 +12,7 @@ using Noise;
 using Random = UnityEngine.Random;
 using System.Runtime.CompilerServices;
 using MonoMod;
+using System.Security.Policy;
 
 namespace SlugTemplate
 {
@@ -20,6 +21,7 @@ namespace SlugTemplate
     {
 
         private const string MOD_ID = "adalynn.metabolite";
+        private ConditionalWeakTable<Player, SpearTime> spearTimeTable = new();
         /*public static readonly PlayerFeature<float> SuperJump = PlayerFloat("TheMetabolite/super_jump");
         public static readonly PlayerFeature<bool> ExplodeOnDeath = PlayerBool("TheMetabolite/explode_on_death");
         public static readonly GameFeature<float> MeanLizards = GameFloat("TheMetabolite/mean_lizards");*/
@@ -27,6 +29,7 @@ namespace SlugTemplate
         public void OnEnable()
         {
             On.RainWorld.OnModsInit += Extras.WrapInit(LoadResources);
+            //On.Player.InitiateGraphicsModule += Player_CWT;
             // Put your custom hooks here!
             //On.Player.Jump += Player_Jump;
             //On.Player.Die += Player_Die;
@@ -42,18 +45,38 @@ namespace SlugTemplate
             On.PlayerGraphics.MSCUpdate += Saint.PlayerGraphics_MSCUpdate;
             On.Player.Grabability += Player_Grabability;
             On.Player.ThrownSpear += Gourmand.ThrownSpear;
-            On.Player.Update += Update;
-            On.Player.ClassMechanicsSpearmaster += Spearmaster.ClassMechanicsSpearmaster;
-            On.Player.GrabUpdate += Spearmaster.GrabUpdate;
+            On.Player.Update += Player_Update;
+            //            On.Player.ClassMechanicsSpearmaster += Spearmaster.ClassMechanicsSpearmaster;
+            //On.Player.GrabUpdate += Player_GrabUpdate;
             On.Player.CraftingResults += Player_CraftingResults;
             On.Player.GraspsCanBeCrafted += Spearmaster.GraspsCanBeCrafted;
             On.Player.SpitUpCraftedObject += Player_SpitUpCraftedObject;
             On.Player.SwallowObject += Artificer.SwallowObject;
         }
-
+        private class SpearTime
+        {
+            public int spearTime;
+            public int STime
+            {
+                get => spearTime;
+                set
+                {
+                    if (value < 0) spearTime = 0;
+                    else spearTime = value;
+                }
+            }
+            public SpearTime()
+            {
+                STime = 60;
+            }
+            public SpearTime(int spearTime)
+            {
+                STime = spearTime;
+            }
+        }
         private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
-            if(self.slugcatStats.name.value == "Metabolite" && obj is Weapon)
+            if (self.slugcatStats.name.value == "Metabolite" && obj is Weapon)
             {
                 return Player.ObjectGrabability.OneHand;
             }
@@ -63,7 +86,7 @@ namespace SlugTemplate
         // Load any resources, such as sprites or sounds
         private void LoadResources(RainWorld rainWorld)
         {
-            
+
         }
         /*
         // Implement MeanLizards
@@ -275,7 +298,7 @@ namespace SlugTemplate
         public static void PlayerGraphics_MSCUpdate(On.PlayerGraphics.orig_MSCUpdate orig, PlayerGraphics self)
         {
             orig.Invoke(self);
-            if (self.player.slugcatStats.name.value != "Metabolite" && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+            if (     && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
             {
                 return;
             }
@@ -316,24 +339,69 @@ namespace SlugTemplate
             }
         }
         #endregion*/
-        private void Update(On.Player.orig_Update orig, Player self, bool eu)
+        private void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
         {
+            SpearTime data = new();
+            bool temp = spearTimeTable.TryGetValue(self, out data);
+            if (temp
+                && self.slugcatStats.name.value == "Metabolite"
+                && self.FoodInStomach >= 1
+                && self.bodyMode == Player.BodyModeIndex.Crawl
+                && self.eatMeat == 0
+                && self.input[0].pckp
+                && self.FreeHand() > -1)
+            {
+                SpearTime replacement = new(data.STime--);
+                if (replacement.spearTime == 0)
+                {
+                    Debug.Log("Spear Generation!");
+                    self.SubtractFood(1);
+                    self.room.PlaySound(MoreSlugcatsEnums.MSCSoundID.SM_Spear_Grab, 0f, 1f, 0.5f + Random.value * 1.5f);
+                    spearTimeTable.Remove(self);
+                    spearTimeTable.Add(self, new());
+                    AbstractSpear abstractSpear = new AbstractSpear(self.room.world, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.room.game.GetNewID(), false);
+                    self.room.abstractRoom.AddEntity(abstractSpear);
+                    abstractSpear.pos = self.abstractCreature.pos;
+                    abstractSpear.RealizeInRoom();
+                    PlayerGraphics.TailSpeckles tailSpecks = (self.graphicsModule as PlayerGraphics).tailSpecks;
+                    if (abstractSpear.type == AbstractPhysicalObject.AbstractObjectType.Spear)
+                    {
+                        (abstractSpear.realizedObject as Spear).Spear_makeNeedle(tailSpecks.spearType, false);
+                        if ((self.graphicsModule as PlayerGraphics).useJollyColor)
+                        {
+                            (abstractSpear.realizedObject as Spear).jollyCustomColor = new Color?(PlayerGraphics.JollyColor(self.playerState.playerNumber, 2));
+                        }
+                    }
+                    if (self.FreeHand() > -1)
+                    {
+                        self.SlugcatGrab(abstractSpear.realizedObject, self.FreeHand());
+                    }
+                }
+            }
+            else if (self.slugcatStats.name.value == "Metabolite")
+            {
+                spearTimeTable.Remove(self);
+                spearTimeTable.Add(self, new());
+            }
             orig(self, eu);
         }
 
         public void Player_GrabUpdate(On.Player.orig_GrabUpdate orig, Player self, bool eu)
         {
-            if(self.slugcatStats.name.value == "Metabolite")
+            if (self.slugcatStats.name.value == "Metabolite")
             {
                 var S = self.SlugCatClass;
                 self.SlugCatClass = MoreSlugcatsEnums.SlugcatStatsName.Artificer;
                 orig(self, eu);
                 self.SlugCatClass = S;
             }
+
             else
             {
                 orig(self, eu);
             }
+
+
         }
 
         public AbstractPhysicalObject.AbstractObjectType Player_CraftingResults(On.Player.orig_CraftingResults orig, Player self)
@@ -448,4 +516,5 @@ namespace SlugTemplate
             }
         }
     }
+
 }
