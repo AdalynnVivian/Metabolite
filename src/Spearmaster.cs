@@ -24,10 +24,6 @@ public static class Spearmaster
 
     public static void GrabUpdate(On.Player.orig_GrabUpdate orig, Player self, bool eu)
     {
-        // Token: 0x06000B8F RID: 2959 RVA: 0x000A6244 File Offset: 0x000A4444
-        if (self.slugcatStats.name.value == "Metabolite" && self.FoodInStomach >= 1 && self.bodyMode == Player.BodyModeIndex.Crawl && self.eatMeat == 0) {
-            var s = self.SlugCatClass;
-            self.SlugCatClass = MoreSlugcatsEnums.SlugcatStatsName.Artificer;
             if (self.spearOnBack != null)
             {
                 self.spearOnBack.Update(eu);
@@ -43,7 +39,7 @@ public static class Spearmaster
             int num = -1;
             int num2 = -1;
             bool flag4 = false;
-            if (ModManager.MSC && !self.input[0].pckp)// && self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Spear)
+            if (ModManager.MSC && !self.input[0].pckp && self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Spear)
             {
                 PlayerGraphics.TailSpeckles tailSpecks = (self.graphicsModule as PlayerGraphics).tailSpecks;
                 if (tailSpecks.spearProg > 0f)
@@ -175,7 +171,7 @@ public static class Spearmaster
                 }
                 if (self.input[0].pckp)
                 {
-                    if (ModManager.MSC && (self.FreeHand() == -1 || self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Artificer || true) && self.GraspsCanBeCrafted())
+                    if (ModManager.MSC /*&& (self.FreeHand() == -1 || self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Artificer)*/ && self.GraspsCanBeCrafted())
                     {
                         self.craftingObject = true;
                         flag3 = true;
@@ -197,7 +193,7 @@ public static class Spearmaster
                     {
                         flag4 = true;
                     }
-                    if (ModManager.MSC && true && (self.grasps[0] == null || self.grasps[1] == null) && num5 == -1 && self.input[0].y == 0)
+                    if (ModManager.MSC && self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Spear && (self.grasps[0] == null || self.grasps[1] == null) && num5 == -1 && self.input[0].y == 0)
                     {
                         PlayerGraphics.TailSpeckles tailSpecks2 = (self.graphicsModule as PlayerGraphics).tailSpecks;
                         if (tailSpecks2.spearProg == 0f)
@@ -227,7 +223,6 @@ public static class Spearmaster
                         }
                         if (tailSpecks2.spearProg == 1f)
                         {
-                            self.SubtractFood(1);
                             self.room.PlaySound(MoreSlugcatsEnums.MSCSoundID.SM_Spear_Grab, 0f, 1f, 0.5f + Random.value * 1.5f);
                             self.smSpearSoundReady = false;
                             Vector2 pos = (self.graphicsModule as PlayerGraphics).tail[(int)((float)(self.graphicsModule as PlayerGraphics).tail.Length / 2f)].pos;
@@ -756,7 +751,7 @@ public static class Spearmaster
                     if (num20 > -1)
                     {
                         self.wantToPickUp = 0;
-                        if (!ModManager.MSC || !(self.grasps[num20].grabbed is Scavenger))
+                        if (!ModManager.MSC /*|| self.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Artificer*/ || !(self.grasps[num20].grabbed is Scavenger))
                         {
                             self.pyroJumpDropLock = 0;
                         }
@@ -893,13 +888,7 @@ public static class Spearmaster
                     self.wantToPickUp = 0;
                 }
             }
-            self.SlugCatClass = s;
         }
-        else
-        {
-            orig(self, eu);
-        }
-    }
     public static void Grab_Update(On.Player.orig_GrabUpdate orig, Player self, bool eu)
     {
         orig.Invoke(self, eu);

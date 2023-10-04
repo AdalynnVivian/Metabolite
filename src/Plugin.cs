@@ -47,7 +47,7 @@ namespace SlugTemplate
             On.Player.ThrownSpear += Gourmand.ThrownSpear;
             On.Player.Update += Player_Update;
             //            On.Player.ClassMechanicsSpearmaster += Spearmaster.ClassMechanicsSpearmaster;
-            //On.Player.GrabUpdate += Player_GrabUpdate;
+            On.Player.GrabUpdate += Spearmaster.GrabUpdate;
             On.Player.CraftingResults += Player_CraftingResults;
             On.Player.GraspsCanBeCrafted += Spearmaster.GraspsCanBeCrafted;
             On.Player.SpitUpCraftedObject += Player_SpitUpCraftedObject;
@@ -406,6 +406,7 @@ namespace SlugTemplate
 
         public AbstractPhysicalObject.AbstractObjectType Player_CraftingResults(On.Player.orig_CraftingResults orig, Player self)
         {
+            Debug.Log("Crafting");
             if (self.slugcatStats.name.value == "Metabolite")
             {
                 if(self.input[0].y == 0)
