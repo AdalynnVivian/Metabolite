@@ -10,6 +10,8 @@ using JetBrains.Annotations;
 using Expedition;
 using Noise;
 using Random = UnityEngine.Random;
+using System.Runtime.CompilerServices;
+
 public static class Saint
 {
     public static void Player_ctor(On.Player.orig_ctor orig, Player player, AbstractCreature abstractCreature, World world)
@@ -74,7 +76,7 @@ public static class Saint
         orig.Invoke(self, sLeaser, rCam);
         //We dont want to add a sprite if the player is saint, since they already have a tongue
         //We're adding one sprite
-        if (self.player.slugcatStats.name.value != "Metabolite" && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -92,13 +94,14 @@ public static class Saint
         sLeaser.sprites[TongueSpriteIndex[self]].RemoveFromContainer();
         //Then add it to where we want it to be 
         rCam.ReturnFContainer("Midground").AddChild(sLeaser.sprites[TongueSpriteIndex[self]]);
+
     }
 
     //Updating the tongue
     public static void PlayerGraphics_DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
     {
         orig.Invoke(self, sLeaser, rCam, timeStacker, camPos);
-        if (self.player.slugcatStats.name.value != "Metabolite" && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -149,7 +152,7 @@ public static class Saint
     public static void PlayerGraphics_ApplyPalette(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
         orig.Invoke(self, sLeaser, rCam, palette);
-        if (self.player.slugcatStats.name.value != "Metabolite" && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -170,7 +173,7 @@ public static class Saint
     public static void PlayerGraphics_MSCUpdate(On.PlayerGraphics.orig_MSCUpdate orig, PlayerGraphics self)
     {
         orig.Invoke(self);
-        if (self.player.slugcatStats.name.value != "Metabolite" && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }

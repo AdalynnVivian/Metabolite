@@ -5,7 +5,7 @@
 	"features": {
 		"color": "17244f",
   "custom_colors": [
-   { "name": "Body", "story": "17244F" },
+   { "name": "Body", "story": "17244F", "arena": [ "FFFFFF", "FF8080", "80FF80", "8080FF" ] },
    { "name": "Eyes", "story": "00c700" },
    { "name": "Tongue", "story": "FF7777" }
   ],
