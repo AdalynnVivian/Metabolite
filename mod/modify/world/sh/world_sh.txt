@@ -1,0 +1,5 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Miros Bird-10, 0-Scavenger-12, 0-MirosVulture-7
+END CREATURES
+[ENDMERGE]

@@ -1,0 +1,7 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Scavenger-9, 0-KingVulture-1, 0-Vulture-2, 0-MirosVulture-3
+(metabolite)SU_B08 : 3-ChimeraLizard-5
+(metabolite)SU_A04 : 4-ChimeraLizard-2, 2-CicadaB, 3-CicadaB
+END CREATURES
+[ENDMERGE]

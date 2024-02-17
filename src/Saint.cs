@@ -22,7 +22,7 @@ public static class Saint
     //A method used in various(2) places to check if the tongue can be shot
     public static bool Player_SaintTongueCheck(On.Player.orig_SaintTongueCheck orig, Player player)
     {
-        if (player.slugcatStats.name.value != "Metabolite" && player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (player.slugcatStats.name.value != "metabolite" && player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return false;
         }
@@ -34,7 +34,7 @@ public static class Saint
     public static void Player_ClassMechanicsSaint(On.Player.orig_ClassMechanicsSaint orig, Player player)
     {
         orig.Invoke(player);
-        if (player.slugcatStats.name.value != "Metabolite" && player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (player.slugcatStats.name.value != "metabolite" && player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -55,7 +55,7 @@ public static class Saint
     public static void PlayerGraphics_ctor(On.PlayerGraphics.orig_ctor orig, PlayerGraphics self, PhysicalObject ow)
     {
         orig.Invoke(self, ow);
-        if (self.player.slugcatStats.name.value != "Metabolite" )//&& self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "metabolite" )//&& self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -76,7 +76,7 @@ public static class Saint
         orig.Invoke(self, sLeaser, rCam);
         //We dont want to add a sprite if the player is saint, since they already have a tongue
         //We're adding one sprite
-        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -101,7 +101,7 @@ public static class Saint
     public static void PlayerGraphics_DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
     {
         orig.Invoke(self, sLeaser, rCam, timeStacker, camPos);
-        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -152,7 +152,7 @@ public static class Saint
     public static void PlayerGraphics_ApplyPalette(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
         orig.Invoke(self, sLeaser, rCam, palette);
-        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }
@@ -173,7 +173,7 @@ public static class Saint
     public static void PlayerGraphics_MSCUpdate(On.PlayerGraphics.orig_MSCUpdate orig, PlayerGraphics self)
     {
         orig.Invoke(self);
-        if (self.player.slugcatStats.name.value != "Metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
+        if (self.player.slugcatStats.name.value != "metabolite")// && self.player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Saint)
         {
             return;
         }

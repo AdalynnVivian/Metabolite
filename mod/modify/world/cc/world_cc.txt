@@ -1,0 +1,6 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Vulture-3, 0-KingVulture-4, 0-MirosVulture-5, 0-Scavenger-11, 0-Elite-2
+(metabolite)CC_A15 : 4-Cyan-2, 3-RedHorrorCenti
+END CREATURES
+[ENDMERGE]

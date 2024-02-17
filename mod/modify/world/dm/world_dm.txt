@@ -1,0 +1,8 @@
+[MERGE]
+CREATURES
+(metabolite)DM_LEG07 : 3-ChimeraLizard-5
+(metabolite)OFFSCREEN : 0-MirosVulture-8
+(metabolite)DM_U07 : 3-SpitterSpider-1, 4-ChimeraLizard-5, 5-SpitterSpider-1
+(metabolite)DM_LEG06 : 6-MotherSpider-2, 10-ChimeraLizard-8, 9-Spider-2, 10-Spider-2, 6-Spider-4
+END CREATURES
+[ENDMERGE]

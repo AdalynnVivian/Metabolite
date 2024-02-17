@@ -1,0 +1,7 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Vulture-2, 0-KingVulture-4, 0-MirosVulture-6, 0-Scavenger-10
+(metabolite)SI_C01 : 4-ChimeraLizard-3, 3-ChimeraLizard-3, 2-Snail-3-{PreCycle}, 5-Snail-2-{PreCycle}
+(metabolite)SI_B09 : 5-ChimeraLizard-5, 6-Centiwing
+END CREATURES
+[ENDMERGE]

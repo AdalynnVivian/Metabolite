@@ -1,0 +1,6 @@
+[MERGE]
+CREATURES
+(metabolite)UW_I01 : 5-ChimeraLizard-4, 6-ChimeraLizard-4
+(metabolite)UW_D04 : 4-ChimeraLizard-5
+END CREATURES
+[ENDMERGE]

@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 public static class Gourmand
 {
     public static void ThrownSpear(On.Player.orig_ThrownSpear orig, Player self, Spear spear) {
-        if (ModManager.MSC && self.slugcatStats.name.value == "Metabolite" && self.FoodInStomach >= 1 && (self.input[0].x == 1 || self.input[0].x == -1))
+        if (ModManager.MSC && self.slugcatStats.name.value == "metabolite" && self.FoodInStomach >= 1 && (self.input[0].x == 1 || self.input[0].x == -1))
         {
             self.SubtractFood(1);
             spear.spearDamageBonus = 2f;

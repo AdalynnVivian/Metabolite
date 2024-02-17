@@ -1,0 +1,7 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Vulture-3, 0-KingVulture-2, 0-Scavenger-8, 0-MirosVulture-4
+(metabolite)LM_TOWER02 : 2-ChimeraLizard-5, 3-CicadaB-3, 4-CicadaA-3
+(metabolite)LM_BRIDGE03 : 2-DropBug-1, 4-ChimeraLizard-5
+END CREATURES
+[ENDMERGE]

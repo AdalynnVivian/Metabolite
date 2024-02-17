@@ -1,0 +1,7 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Vulture-1, 0-KingVulture-2, 0-MirosVulture-3, 0-Scavenger-12
+(metabolite)HI_B12 : 2-ChimeraLizard-5, 3-EggBug
+(metabolite)HI_B07 : 3-ChimeraLizard-5, 2-EggBug, 3-TentaclePlant-{PreCycle}
+END CREATURES
+[ENDMERGE]

@@ -1,0 +1,6 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Deer-4, 0-Vulture-1, 0-KingVulture-2, 0-MirosVulture-3, 0-Scavenger-17
+(metabolite)LF_D03 : 5-CicadaA, 6-Centipede, 6-Salamander-{PreCycle}, 2-ChimeraLizard-2, 3-ChimeraLizard-2
+END CREATURES
+[ENDMERGE]

@@ -22,7 +22,7 @@ public static class Artificer
             self.pyroJumpDropLock--;
         }*/
         if// (self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Artificer ||
-            (self.slugcatStats.name.value == "Metabolite" && self.FoodInStomach >= 1) //||
+            (self.slugcatStats.name.value == "metabolite" && self.FoodInStomach >= 1) //||
             //(ExpeditionGame.explosivejump && !self.isSlugpup))
         {
             bool flag = self.wantToJump > 0 && self.input[0].pckp;
@@ -58,7 +58,7 @@ public static class Artificer
             }
             if (flag && !self.pyroJumpped && self.canJump <= 0 && !flag2 && (self.input[0].y >= 0 || (self.input[0].y < 0 && (self.bodyMode == Player.BodyModeIndex.ZeroG || self.gravity <= 0.1f))) && self.Consious && self.bodyMode != Player.BodyModeIndex.Crawl && self.bodyMode != Player.BodyModeIndex.CorridorClimb && self.bodyMode != Player.BodyModeIndex.ClimbIntoShortCut && self.animation != Player.AnimationIndex.HangFromBeam && self.animation != Player.AnimationIndex.ClimbOnBeam && self.bodyMode != Player.BodyModeIndex.WallClimb && self.bodyMode != Player.BodyModeIndex.Swimming && self.animation != Player.AnimationIndex.AntlerClimb && self.animation != Player.AnimationIndex.VineGrab && self.animation != Player.AnimationIndex.ZeroGPoleGrab && self.onBack == null)
             {
-                if(self.slugcatStats.name.value == "Metabolite")
+                if(self.slugcatStats.name.value == "metabolite")
                 {
                     self.SubtractFood(1);
                 }
@@ -146,7 +146,7 @@ public static class Artificer
             {
                 if (self.canJump <= 0)
                 {
-                    if (self.slugcatStats.name.value == "Metabolite")
+                    if (self.slugcatStats.name.value == "metabolite")
                     {
                         self.SubtractFood(1);
                     }
@@ -283,7 +283,7 @@ public static class Artificer
     }
     public static void SwallowObject(On.Player.orig_SwallowObject orig, Player self, int grasp)
     {
-        if (self.slugcatStats.name.value == "Metabolite")
+        if (self.slugcatStats.name.value == "metabolite")
         {
             if (grasp < 0 || self.grasps[grasp] == null)
             {

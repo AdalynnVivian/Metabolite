@@ -1,0 +1,7 @@
+[MERGE]
+CREATURES
+(metabolite)OFFSCREEN : 0-Vulture-3, 0-KingVulture-2, 0-MirosVulture-1, 0-Scavenger-30, 0-Elite-1
+(metabolite)GW_TOWER08 : 3-ChimeraLizard-5
+(metabolite)W_D01_PAST : 7-Leech-8, 16-Garbage Worm-5, 5-ChimeraLizard-5, 8-Leech-7
+END CREATURES
+[ENDMERGE]

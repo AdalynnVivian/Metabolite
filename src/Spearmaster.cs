@@ -7,7 +7,7 @@ public static class Spearmaster
 {
     public static void ClassMechanicsSpearmaster(On.Player.orig_ClassMechanicsSpearmaster orig, Player self)
     {
-        if ((self.stun >= 1 || self.dead) && self.slugcatStats.name.value == "Metabolite" && self.FoodInStomach > 0)
+        if ((self.stun >= 1 || self.dead) && self.slugcatStats.name.value == "metabolite" && self.FoodInStomach > 0)
         {
             PlayerGraphics.TailSpeckles tailSpecks = (self.graphicsModule as PlayerGraphics).tailSpecks;
             if (tailSpecks.spearProg > 0f)
@@ -896,7 +896,7 @@ public static class Spearmaster
 
     public static bool GraspsCanBeCrafted(On.Player.orig_GraspsCanBeCrafted orig, Player self)
     {
-        if (self.slugcatStats.name.value == "Metabolite")
+        if (self.slugcatStats.name.value == "metabolite")
         {
             return (self.input[0].y == 0 && Artificer.CraftingResults(self) != null) ||
                 (self.input[0].y == 1 && Gourmand.CraftingResults(self) != null);

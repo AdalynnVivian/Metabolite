@@ -76,7 +76,7 @@ namespace SlugTemplate
         }
         private Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
-            if (self.slugcatStats.name.value == "Metabolite" && obj is Weapon)
+            if (self.slugcatStats.name.value == "metabolite" && obj is Weapon)
             {
                 return Player.ObjectGrabability.OneHand;
             }
@@ -93,7 +93,7 @@ namespace SlugTemplate
             SpearTime data = new();
             bool temp = spearTimeTable.TryGetValue(self, out data);
             if (temp
-                && self.slugcatStats.name.value == "Metabolite"
+                && self.slugcatStats.name.value == "metabolite"
                 && self.FoodInStomach >= 1
                 && self.bodyMode == Player.BodyModeIndex.Crawl
                 && self.eatMeat == 0
@@ -127,7 +127,7 @@ namespace SlugTemplate
                     }
                 }
             }
-            else if (self.slugcatStats.name.value == "Metabolite")
+            else if (self.slugcatStats.name.value == "metabolite")
             {
                 spearTimeTable.Remove(self);
                 spearTimeTable.Add(self, new());
@@ -137,7 +137,7 @@ namespace SlugTemplate
 
         public void Player_GrabUpdate(On.Player.orig_GrabUpdate orig, Player self, bool eu)
         {
-            if (self.slugcatStats.name.value == "Metabolite")
+            if (self.slugcatStats.name.value == "metabolite")
             {
                 var S = self.SlugCatClass;
                 self.SlugCatClass = MoreSlugcatsEnums.SlugcatStatsName.Artificer;
@@ -156,7 +156,7 @@ namespace SlugTemplate
         public AbstractPhysicalObject.AbstractObjectType Player_CraftingResults(On.Player.orig_CraftingResults orig, Player self)
         {
             Debug.Log("Crafting");
-            if (self.slugcatStats.name.value == "Metabolite")
+            if (self.slugcatStats.name.value == "metabolite")
             {
                 if(self.input[0].y == 0)
                 {

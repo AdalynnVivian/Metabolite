@@ -1,0 +1,6 @@
+[MERGE]
+CREATURES
+(metabolite)DS_A22 : 3-ChimeraLizard-5
+(metabolite)DS_C04 : 3-RedHorrorCenti
+END CREATURES
+[ENDMERGE]
